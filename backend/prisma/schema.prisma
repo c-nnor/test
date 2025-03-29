@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Note {
+  id        String   @id @default(uuid()) 
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id               Int               @id @default(autoincrement())
+  email            String            @unique
+  name             String
+  password         String 
+  store            Store             @default(SPRUCEFIELD)
+  isVerified       Boolean           @default(false)
+  role             Role              @default(USER)
+  verificationToken String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  travelPathReports TravelPathReport[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Store {
+  SPRUCEFIELD
+  MCKINSTRY
+  BANBRIDGE
+  NEWRY
+  PORTADOWN
+  LURGAN
+}
+
+model TravelPathReport {
+  id          Int               @id @default(autoincrement())
+  userId      Int
+  startTime   DateTime
+  endTime     DateTime
+  duration    String
+  createdAt   DateTime          @default(now())
+  user        User              @relation(fields: [userId], references: [id])
+  locations   LocationCheck[]
+}
+
+model LocationCheck {
+  id                Int               @id @default(autoincrement())
+  travelPathReportId Int
+  travelPathReport  TravelPathReport  @relation(fields: [travelPathReportId], references: [id], onDelete: Cascade)
+  name              String            // Location name (e.g., "Dining Area")
+  checkItems        CheckItem[]
+}
+
+model CheckItem {
+  id               Int               @id @default(autoincrement())
+  locationCheckId  Int
+  locationCheck    LocationCheck     @relation(fields: [locationCheckId], references: [id], onDelete: Cascade)
+  question         String            // The check question (e.g., "Is floor clean?")
+  result           Boolean           // Yes (true) or No (false)
+  action           String?           // Action taken (required when result is false)
+}

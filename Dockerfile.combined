@@ -1,0 +1,95 @@
+# Stage 1: Build frontend
+FROM node:18-alpine as frontend-build
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm install
+COPY frontend/ ./
+RUN npm run build -- --skip-lint
+
+# Stage 2: Build backend
+FROM node:18-bullseye as backend-build
+WORKDIR /app/backend
+COPY backend/package*.json ./
+RUN npm install
+COPY backend/ ./
+COPY backend/.env ./
+RUN apt-get update && apt-get install -y libssl1.1 openssl
+COPY backend/prisma ./prisma/
+RUN npx prisma generate
+RUN npm run build
+
+# Stage 3: Runtime environment with Nginx, Node, and Postgres
+FROM node:18-bullseye
+
+# Install Nginx and PostgreSQL
+RUN apt-get update && apt-get install -y \
+    nginx \
+    postgresql \
+    postgresql-contrib \
+    libssl1.1 \
+    openssl \
+    supervisor \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Configure PostgreSQL
+USER postgres
+RUN /etc/init.d/postgresql start && \
+    psql --command "CREATE USER mcdapp WITH SUPERUSER PASSWORD 'mcdapp123';" && \
+    createdb -O mcdapp mcdtravelpath && \
+    /etc/init.d/postgresql stop
+USER root
+
+# Copy Nginx configuration
+COPY nginx.conf /etc/nginx/sites-available/default
+
+# Copy frontend build
+COPY --from=frontend-build /app/frontend/dist /var/www/html
+
+# Set up backend
+WORKDIR /app/backend
+COPY --from=backend-build /app/backend/dist ./dist
+COPY --from=backend-build /app/backend/node_modules ./node_modules
+COPY --from=backend-build /app/backend/prisma ./prisma
+COPY --from=backend-build /app/backend/package*.json ./
+
+# Create startup script to run migrations
+RUN echo '#!/bin/bash\n\
+# Start PostgreSQL\n\
+service postgresql start\n\
+# Wait for PostgreSQL to start\n\
+until pg_isready -U postgres; do\n\
+  echo "Waiting for PostgreSQL to start..."\n\
+  sleep 1\n\
+done\n\
+# Run Prisma migrations\n\
+cd /app/backend\n\
+npx prisma migrate deploy\n\
+# Start supervisord\n\
+/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf\n\
+' > /startup.sh && chmod +x /startup.sh
+
+# Copy supervisor configuration
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Set environment variables for database connection
+ENV DATABASE_URL="postgresql://mcdapp:mcdapp123@localhost:5432/mcdtravelpath?schema=public"
+ENV JWT_SECRET="your-secure-jwt-secret-please-change-this-in-production"
+ENV EMAIL_VERIFICATION="true"
+ENV MAIL_USER="ee92788ce71ba4"
+ENV MAIL_PASSWORD="c34a044284ff02"
+ENV APP_URL="http://localhost"
+
+# Create necessary directories for logs
+RUN mkdir -p /var/log/supervisor
+
+# Health check to verify all services are running
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD pg_isready -U postgres && \
+      curl -f http://localhost/api/health || exit 1
+
+# Expose ports
+EXPOSE 80 3000 5432
+
+# Start all services using the startup script
+CMD ["/startup.sh"] 

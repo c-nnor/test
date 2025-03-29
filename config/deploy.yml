@@ -121,4 +121,4 @@ accessories:
       secret:
         - POSTGRES_PASSWORD
     directories:
-      - data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data

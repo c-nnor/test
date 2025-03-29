@@ -48,5 +48,7 @@ COPY --from=backend_builder /app/dist ./dist
 COPY --from=backend_builder /app/package.json ./
 COPY --from=backend_builder /app/node_modules ./node_modules
 
-CMD ["npm", "run", "start:prod"]
+# CMD ["npm", "run", "start:prod"]
+ENTRYPOINT ["tail"]
+CMD ["-f","/dev/null"]
 

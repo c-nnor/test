@@ -22,7 +22,7 @@ proxy:
   host: starterskit.co.uk
   # Proxy connects to your container on port 80 by default.
   app_port: 3000
-  health_check:
+  healthcheck:
     interval: 3
     path: /health
     timeout: 3

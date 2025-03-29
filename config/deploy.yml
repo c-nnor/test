@@ -52,10 +52,9 @@ builder:
 #   secret:
 #     - RAILS_MASTER_KEY
 env: 
-  clear:
+  secret:
     - MAIL_USER
     - PORT
-  secret:
     - MAIL_PASSWORD
     - JWT_SECRET
     - DATABASE_URL

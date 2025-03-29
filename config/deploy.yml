@@ -1,13 +1,13 @@
 # Name of your application. Used to uniquely configure containers.
-service: mcd-travelpath-app
+service: kamal-loco
 
 # Name of the container image.
-image: connorcharnock/mcd-travelpath-app
+image: yinho999/kamal-loco
 
 # Deploy to these servers.
 servers:
   web:
-    - 18.130.45.193
+    - 91.99.7.218
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -19,15 +19,19 @@ servers:
 # Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
 proxy:
   ssl: true
-  host: connordev.cc
+  host: starterskit.co.uk
   # Proxy connects to your container on port 80 by default.
-  # app_port: 3000
+  app_port: 3000
+  health_check:
+    interval: 3
+    path: /health
+    timeout: 3
 
 # Credentials for your image host.
 registry:
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
-  username: connorcharnock
+  username: yinho999
 
   # Always use an access token rather than real password (pulled from .kamal/secrets).
   password:
@@ -36,7 +40,6 @@ registry:
 # Configure builder setup.
 builder:
   arch: amd64
-  dockerfile: Dockerfile.combined
   # Pass in additional build args needed for your Dockerfile.
   # args:
   #   RUBY_VERSION: <%= ENV["RBENV_VERSION"] || ENV["rvm_ruby_string"] || "#{RUBY_ENGINE}-#{RUBY_ENGINE_VERSION}" %>
@@ -48,7 +51,14 @@ builder:
 #     DB_HOST: 192.168.0.2
 #   secret:
 #     - RAILS_MASTER_KEY
-
+env: 
+  secret:
+    - DATABASE_USER
+    - DATABASE_PASSWORD
+    - DATABASE_HOST
+    - DATABASE_PORT
+    - DATABASE_NAME
+    - DATABASE_SCHEMA
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal app logs -r job" will tail logs from the first server in the job section.
 #
@@ -56,8 +66,9 @@ builder:
 #   shell: app exec --interactive --reuse "bash"
 
 # Use a different ssh user than root
-ssh:
-  user: ubuntu
+#
+# ssh:
+#   user: app
 
 # Use a persistent storage volume.
 #
@@ -99,3 +110,15 @@ ssh:
 #     port: 6379
 #     directories:
 #       - data:/data
+accessories:
+  db:
+    image: postgres:16
+    host: 91.99.7.218
+    port: "127.0.0.1:5432:5432"
+    env:
+      secret:
+        DATABASE_USER
+        DATABASE_PASSWORD
+        POSTGRES_PASSWORD
+    directories:
+      - data:/var/lib/postgresql/data

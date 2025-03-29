@@ -542,9 +542,9 @@ import {
   Users, MoreVertical, Search, Filter, Calendar, Eye,
   Download, TrendingUp, TrendingDown, Minus, MapPin, Check
 } from 'lucide-vue-next'
-import ReportViewModal from '../components/ReportViewModal.vue'
-import DailyCompletionChart from '../components/DailyCompletionChart.vue'
-import IssuesByLocationChart from '../components/IssuesByLocationChart.vue'
+import ReportViewModal from './ReportViewModal.vue'
+import DailyCompletionChart from './DailyCompletionChart.vue'
+import IssuesByLocationChart from './IssuesByLocationChart.vue'
 import { useRouter } from 'vue-router'
 const router = useRouter();
 console.log('AdminDashboardPage imports completed');

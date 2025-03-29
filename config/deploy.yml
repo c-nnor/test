@@ -118,6 +118,7 @@ accessories:
       clear:
         POSTGRES_USER: postgres
         POSTGRES_DB: postgres
+        POSTGRES_HOST_AUTH_METHOD: md5
       secret:
         - POSTGRES_PASSWORD
         - PGPASSWORD

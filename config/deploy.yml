@@ -120,5 +120,6 @@ accessories:
         POSTGRES_DB: postgres
       secret:
         - POSTGRES_PASSWORD
+        - PGPASSWORD
     directories:
       - data:/var/lib/postgresql/data

@@ -52,13 +52,13 @@ builder:
 #   secret:
 #     - RAILS_MASTER_KEY
 env: 
+  clear:
+    - MAIL_USER
+    - PORT
   secret:
-    - DATABASE_USER
-    - DATABASE_PASSWORD
-    - DATABASE_HOST
-    - DATABASE_PORT
-    - DATABASE_NAME
-    - DATABASE_SCHEMA
+    - MAIL_PASSWORD
+    - JWT_SECRET
+    - DATABASE_URL
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal app logs -r job" will tail logs from the first server in the job section.
 #

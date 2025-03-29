@@ -26,15 +26,15 @@ RUN npx prisma generate
 RUN npm run build
 
 
-# Database builder 
-FROM node:22-alpine as database_builder
+# # Database builder 
+# FROM node:22-alpine as database_builder
 
-WORKDIR /app
+# WORKDIR /app
 
-COPY ./backend/prisma ./prisma/
+# COPY ./backend/prisma ./prisma/
 
 
-RUN npx prisma migrate deploy
+# RUN npx prisma migrate deploy
 
 
 # Final stage

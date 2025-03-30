@@ -230,7 +230,8 @@ const handleLogin = async () => {
         // Regular user in normal mode - proceed to app
         console.log("Regular user - redirecting to app");
         setTimeout(() => {
-          window.location.href = '/travelpath';
+          // window.location.href = '/travelpath';
+          console.log("Redirecting to travelpath")
         }, 500);
       }
     }

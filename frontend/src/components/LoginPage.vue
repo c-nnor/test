@@ -171,6 +171,9 @@ const handleLogin = async () => {
     // Store token in localStorage
     try {
       localStorage.setItem('token', token);
+      // Store token in session storage
+      sessionStorage.setItem('token', token);
+      console.log("Token stored in session storage:", token);
       
       // Verify token was stored correctly
       const storedToken = localStorage.getItem('token');

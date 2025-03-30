@@ -43,7 +43,7 @@ FROM node:22-alpine as final
 WORKDIR /app
 
 COPY --from=frontend_builder /app/dist ./frontend/dist
-COPY --from=backend_builder /app/dist ./dist
+COPY --from=backend_builder /app/dist ./
 
 COPY --from=backend_builder /app/package.json ./
 COPY --from=backend_builder /app/node_modules ./node_modules

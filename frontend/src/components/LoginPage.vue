@@ -147,7 +147,7 @@ const isAdminMode = ref(false)
 const handleLogin = async () => {
   try {
     // Use a single authentication endpoint regardless of admin mode
-    axios.post('/api/auth/signin', {
+    axios.post('/auth/signin', {
       email: email.value,
       password: password.value,
     })

@@ -255,7 +255,7 @@ const handleSignup = async () => {
       return
     }
     
-    const response = await axios.post('/api/auth/signup', {
+    const response = await axios.post('/auth/signup', {
       email: email.value,
       name: name.value,
       password: password.value,

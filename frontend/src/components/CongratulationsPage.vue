@@ -91,7 +91,7 @@
     if (resendCountdown.value > 0 || !email.value) return
     
     // API call to resend verification email
-    axios.post('/api/auth/resend-verification', {
+    axios.post('/auth/resend-verification', {
       email: email.value
     })
     .then(() => {

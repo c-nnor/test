@@ -657,7 +657,7 @@ const leaderboardPeriods = [
 ]
 
 // API endpoints - 
-const API_BASE_URL = '/api'
+const API_BASE_URL = ''
 const API_ENDPOINTS = {
   dashboardStats: '/travelpath/data/dailystats',
   recentReports: '/travelpath/data/recent',

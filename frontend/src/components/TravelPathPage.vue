@@ -273,7 +273,7 @@ const finishPath = async () => {
     
     // Send data to server with token in Authorization header
     const response = await axios.post(
-      '/api/travelpath/createreport', 
+      '/travelpath/createreport', 
       payload,
       {
         headers: {

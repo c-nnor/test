@@ -122,3 +122,7 @@ accessories:
         - POSTGRES_PASSWORD
     directories:
       - postgres_data:/var/lib/postgresql/data
+hooks:
+  post_deploy:
+    - command: kamal app exec "npm run prisma:migrate:prod"
+      once: true

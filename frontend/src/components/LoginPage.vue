@@ -146,69 +146,103 @@ const isAdminMode = ref(false)
 
 const handleLogin = async () => {
   try {
-    // Use a single authentication endpoint regardless of admin mode
-    axios.post('/auth/signin', {
+    console.log("Attempting login with:", { email: email.value });
+    
+    // Make the API request
+    const response = await axios.post('/auth/signin', {
       email: email.value,
       password: password.value,
-    })
-    .then(function (response) {
-      if (response.status !== 500) {
-        // Store the token
-        const token = response.data.token
-        localStorage.setItem('token', token)
-        
-        // Clear form fields
-        email.value = ""
-        password.value = ""
-        
-        // Decode the JWT token to get the payload
-        const payload = decodeJWT(token)
-        console.log("JWT Payload:", payload)
-        
-        // Extract the role from the payload
-        const userRole = payload?.role?.toUpperCase() || 'USER'
-        console.log("User Role:", userRole)
-        
-        // Determine redirect based on role and current mode
-        if (userRole === 'ADMIN') {
-          notification.value = "✅ Authentication successful"
-          notificationType.value = 'success'
-          
-          // If in admin mode, go directly to admin dashboard
-          if (isAdminMode.value) {
-            window.location.href = '/admin/dash'
-            console.log("111")
-          } else {
-            // If not in admin mode but user has admin role, offer choice
-            setTimeout(() => {
-              showAdminRedirectOption()
-            }, 1000)
-            window.location.href = '/travelpath'
-          }
-        } else {
-          // Regular user - check if they're trying to access admin mode
-          if (isAdminMode.value) {
-            notification.value = "❌ You don't have admin privileges"
-            notificationType.value = 'error'
-          } else {
-            notification.value = "✅ Authentication successful"
-            notificationType.value = 'success'
-            window.location.href = '/travelpath'
-          }
-        }
+    });
+    
+    console.log("Login response:", response);
+    
+    // Check if we have a token in the response
+    if (!response.data || !response.data.token) {
+      console.error("No token received in response:", response.data);
+      notification.value = "❌ Authentication failed - no token received";
+      notificationType.value = 'error';
+      return;
+    }
+    
+    // Extract and log the token
+    const token = response.data.token;
+    console.log("Token received:", token);
+    
+    // Store token in localStorage
+    try {
+      localStorage.setItem('token', token);
+      
+      // Verify token was stored correctly
+      const storedToken = localStorage.getItem('token');
+      if (storedToken !== token) {
+        console.error("Token storage verification failed");
+        notification.value = "❌ Error storing authentication data";
+        notificationType.value = 'error';
+        return;
       }
-    })
-    .catch(function (error) {
-      console.log(error);
-      notification.value = isAdminMode.value
-        ? "❌ Admin authentication failed. Please verify your credentials."
-        : "❌ We've run into an error processing this account. Please ensure the details are correct."
-      notificationType.value = 'error'
-    })
-  } catch (e) {
-    console.log(e);
-    notification.value = "❌ An unexpected error occurred. Please try again."
-    notificationType.value = 'error'
+      console.log("Token successfully stored in localStorage");
+    } catch (storageError) {
+      console.error("localStorage error:", storageError);
+      notification.value = "❌ Could not store authentication data";
+      notificationType.value = 'error';
+      return;
+    }
+    
+    // Clear form fields
+    email.value = "";
+    password.value = "";
+    
+    // Decode the JWT token to get the payload
+    const payload = decodeJWT(token);
+    console.log("JWT Payload:", payload);
+    
+    // Extract the role from the payload
+    const userRole = payload?.role?.toUpperCase() || 'USER';
+    console.log("User Role:", userRole);
+    
+    // Set success notification first
+    notification.value = "✅ Authentication successful";
+    notificationType.value = 'success';
+    
+    // Determine redirect based on role and current mode
+    if (userRole === 'ADMIN') {
+      if (isAdminMode.value) {
+        // Admin user in admin mode - go to admin dashboard
+        console.log("Admin user in admin mode - redirecting to admin dashboard");
+        setTimeout(() => {
+          window.location.href = '/admin/dash';
+        }, 500); // Small delay to ensure notification is seen
+      } else {
+        // Admin user in normal mode - offer choice with delay
+        console.log("Admin user in normal mode - redirecting with option");
+        setTimeout(() => {
+          showAdminRedirectOption();
+          window.location.href = '/travelpath';
+        }, 1000);
+      }
+    } else {
+      // Regular user
+      if (isAdminMode.value) {
+        // Regular user trying to access admin mode
+        notification.value = "❌ You don't have admin privileges";
+        notificationType.value = 'error';
+      } else {
+        // Regular user in normal mode - proceed to app
+        console.log("Regular user - redirecting to app");
+        setTimeout(() => {
+          window.location.href = '/travelpath';
+        }, 500);
+      }
+    }
+  } catch (error) {
+    // Handle errors
+    console.error("Login error:", error);
+    console.error("Error details:", error.response?.data || error.message);
+    
+    notification.value = isAdminMode.value
+      ? "❌ Admin authentication failed. Please verify your credentials."
+      : "❌ We've run into an error processing this account. Please ensure the details are correct.";
+    notificationType.value = 'error';
   }
 }
 

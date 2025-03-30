@@ -14,7 +14,7 @@
     "start:prod": "node dist/main",
     "prisma:generate": "npx prisma generate",
     "prisma:migrate:dev": "npx prisma migrate dev",
-    "prisma:migrate:prod": "npx prisma migrate deploy",
+    "prisma:migrate:prod": "npx prisma migrate deploy --schema=./dist/prisma/schema.prisma",
     "prisma:studio": "npx prisma studio",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",

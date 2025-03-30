@@ -93,7 +93,13 @@ function decodeJWT(token) {
 
 /// Navigation Guard to Check Authentication
 router.beforeEach(async (to, from, next) => {
-  const token = localStorage.getItem('token')
+  let token = localStorage.getItem('token');
+
+  // If not in localStorage, try sessionStorage
+  if (!token) {
+    token = sessionStorage.getItem('token');
+    console.log("Retrieved token from sessionStorage:", !!token);
+  }
   
   // Original authentication check for protected routes
   if (to.meta.requiresAuth) {
@@ -102,7 +108,7 @@ router.beforeEach(async (to, from, next) => {
     } else {
       try {
         // Verify token with your backend using axios
-        const response = await axios.post('/api/auth/jwt/verify-token', {}, {
+        const response = await axios.post('/auth/jwt/verify-token', {}, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

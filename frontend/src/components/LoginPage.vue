@@ -174,7 +174,7 @@ const handleLogin = async () => {
       // Store token in session storage
       sessionStorage.setItem('token', token);
       console.log("Token stored in session storage:", token);
-      
+
       // Verify token was stored correctly
       const storedToken = localStorage.getItem('token');
       if (storedToken !== token) {
@@ -233,7 +233,7 @@ const handleLogin = async () => {
         // Regular user in normal mode - proceed to app
         console.log("Regular user - redirecting to app");
         setTimeout(() => {
-          // window.location.href = '/travelpath';
+          window.location.href = '/travelpath';
           console.log("Redirecting to travelpath")
         }, 500);
       }

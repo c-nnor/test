@@ -149,6 +149,7 @@ const handleSubmit = async () => {
       password: password.value,
       confirmPassword: confirmPassword.value
     })
+    console.log(response)
     
     // Show success message
     resetSuccess.value = true

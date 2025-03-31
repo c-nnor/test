@@ -60,7 +60,13 @@ const router = createRouter({
       name: 'notes-dashboard',
       component: DashboardPage,
       meta: { requiresAuth: true, requiresAdmin: true }
-    }
+    },
+    {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: () => import('./components/ForgotPasswordPage.vue')
+    },
+    
   ]
 })
 

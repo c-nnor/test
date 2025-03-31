@@ -144,4 +144,71 @@ export class AuthService {
           return null;
         }
     }
+ // Forgot password functionality
+ async forgotPassword(email: string): Promise<String> {
+    // Find user by email
+    const user = await this.prisma.user.findUnique({
+        where: { email },
+    });
+
+    // If user exists, generate a reset token and send an email
+    if (user) {
+        // Generate token
+        const resetToken = await crypto.randomBytes(20).toString('hex');
+        const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour from now
+
+        // Update user with reset token
+        await this.prisma.user.update({
+            where: { id: user.id },
+            data: {
+                resetToken,
+                resetTokenExpiry,
+            },
+        });
+
+        await this.mailService.sendPasswordResetEmail(email, resetToken);
+    }
+
+    // Always return the same message regardless of whether the user exists
+    // This prevents user enumeration attacks
+    return "If an account with that email exists, we sent a password reset link.";
 }
+
+// Reset password functionality
+async resetPassword(token: string, password: string, confirmPassword: string): Promise<String> {
+    // Check if passwords match
+    if (password !== confirmPassword) {
+        throw new HttpException("Passwords do not match", HttpStatus.BAD_REQUEST);
+    }
+
+    // Find user by reset token and ensure token hasn't expired
+    const user = await this.prisma.user.findFirst({
+        where: {
+            resetToken: token,
+            resetTokenExpiry: {
+                gt: new Date(), // Token must be greater than current time (not expired)
+            },
+        },
+    });
+
+    if (!user) {
+        throw new HttpException("Invalid or expired reset token", HttpStatus.BAD_REQUEST);
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update user with new password and clear reset token
+    await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+            password: hashedPassword,
+            resetToken: null,
+            resetTokenExpiry: null,
+        },
+    });
+
+    return "Password has been successfully reset";
+}
+}
+

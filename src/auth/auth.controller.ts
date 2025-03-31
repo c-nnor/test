@@ -58,6 +58,16 @@ async AccountSearchById(@Param('id') id: string) {
         }
     }
 
+    @Post('/forgot-password')
+    async forgotPassword(@Body() body: { email: string }) {
+        return this.authService.forgotPassword(body.email);
+    }
+
+    @Post('/reset-password')
+    async resetPassword(@Body() body: { token: string, password: string, confirmPassword: string }) {
+        return this.authService.resetPassword(body.token, body.password, body.confirmPassword);
+    }
+
     @Post('/jwt/verify-token')
   async verifyToken(@Request() req) {
     try {

@@ -44,7 +44,7 @@ export class MailService {
       }
 
       async sendPasswordResetEmail(to: string, token: string): Promise<void> {
-        const resetUrl = `${process.env.APP_URL || 'https://connordev.cc'}/auth/reset-password?token=${token}`;
+        const resetUrl = `${process.env.APP_URL || 'https://connordev.cc'}/reset-password?token=${token}`;
         
         const mailOptions = {
           from: '"McDonald\'s Travel Path App" <no-reply@mcdapp.com>',

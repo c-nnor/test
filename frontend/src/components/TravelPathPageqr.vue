@@ -54,10 +54,6 @@
                   <button @click="activateCamera" class="scan-button">
                     Activate Camera
                   </button>
-                  Simulation button for testing
-                  <button @click="simulateScan" class="secondary-button mt-2">
-                    Simulate Scan (Dev Only)
-                  </button>
                 </div>
                 
                 <!-- jsQR scanner when camera is active -->
@@ -528,13 +524,6 @@ const deactivateCamera = () => {
     clearTimeout(scanTimeout.value)
     scanTimeout.value = null
   }
-}
-
-// For development/testing purposes
-const simulateScan = () => {
-  locationScanned.value = true
-  locations.value[currentLocationIndex.value].scanned = true;
-  showNotification('QR code scan simulated!')
 }
 
 const goToNextLocation = () => {

@@ -7,8 +7,9 @@ export class MailService {
 
     constructor() {
         this.transporter = nodemailer.createTransport({
-          host: 'sandbox.smtp.mailtrap.io',
-          port: 2525,
+          host: 'smtp.gmail.com',
+          port: 587,
+          secure: false,
           auth: {
             user: process.env.MAIL_USER,
             pass: process.env.MAIL_PASSWORD,
@@ -17,7 +18,7 @@ export class MailService {
       }
 
       async sendVerificationEmail(to: string, token: string): Promise<void> {
-        const verificationUrl = `${process.env.APP_URL || 'http://localhost'}/api/auth/verify?token=${token}`;
+        const verificationUrl = `${process.env.APP_URL || 'https://connordev.cc'}/auth/verify?token=${token}`;
     
         const mailOptions = {
           from: '"McDonald\'s Travel Path App" <no-reply@mcdapp.com>',

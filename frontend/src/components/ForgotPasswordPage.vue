@@ -69,6 +69,7 @@
       const response = await axios.post('/auth/forgot-password', {
         email: email.value
       })
+      console.log(response)
       
       // Show success message
       notificationType.value = 'success'

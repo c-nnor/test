@@ -54,10 +54,6 @@
                   <button @click="activateCamera" class="scan-button">
                     Activate Camera
                   </button>
-                  <!-- Simulation button for testing -->
-                  <button @click="simulateScan" class="secondary-button mt-2">
-                    Simulate Scan (Dev Only)
-                  </button>
                 </div>
                 
                 <!-- jsQR scanner when camera is active -->

@@ -97,6 +97,12 @@
             Sign up
           </a>
         </p>
+        <p class="privacy-text">
+          By using this application, you agree to our
+          <router-link to="/privacy-policy" class="privacy-link">
+            Privacy Policy
+          </router-link>
+        </p>
       </form>
       
       <!-- Admin Access Info -->
@@ -661,5 +667,22 @@ const toggleAdminAccess = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.privacy-text {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-gray-500);
+}
+
+.privacy-link {
+  font-weight: 500;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.privacy-link:hover {
+  text-decoration: underline;
 }
 </style>

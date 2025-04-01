@@ -70,8 +70,12 @@ const router = createRouter({
       path: '/reset-password',
       name: 'reset-password',
       component: () => import('./components/ResetPasswordPage.vue')
+    },
+    {
+      path: '/privacy-policy',
+      name: 'privacy-policy',
+      component: () => import('./components/PrivacyPolicy.vue')
     }
-    
   ]
 })
 

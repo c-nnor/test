@@ -20,10 +20,8 @@ servers:
 proxy:
   ssl: true
   hosts: 
-  - connordev.cc
-  - www.connordev.cc
-  - www.travelpathmanager.co.uk
   - travelpathmanager.co.uk
+  - www.travelpathmanager.co.uk
   # Proxy connects to your container on port 80 by default.
   app_port: 3000
   healthcheck:

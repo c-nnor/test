@@ -75,6 +75,12 @@ const router = createRouter({
       path: '/privacy-policy',
       name: 'privacy-policy',
       component: () => import('./components/PrivacyPolicy.vue')
+    },
+    {
+      path: '/delete-account',
+      name: 'delete-account',
+      component: () => import('./components/DeleteAccountPage.vue'),
+      meta: { requiresAuth: true } // Ensure authentication is required
     }
   ]
 })

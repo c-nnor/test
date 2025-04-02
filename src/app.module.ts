@@ -18,6 +18,8 @@ import { LeaderboardModule } from './leaderboard/leaderboard.module';
 import { LeaderboardService } from './leaderboard/leaderboard.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AccountModule } from './account/account.module';
+import { AccountService } from './account/account.service';
 
 @Module({
   imports: [
@@ -32,6 +34,7 @@ import { join } from 'path';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'frontend', 'dist'),
     }),
+    AccountModule,
   ],
   controllers: [AppController, TravelpathController, LeaderboardController],
   providers: [
@@ -41,6 +44,7 @@ import { join } from 'path';
     MailService,
     TravelpathService,
     LeaderboardService,
+    AccountService,
   ],
 })
 export class AppModule {}

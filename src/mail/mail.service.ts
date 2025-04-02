@@ -18,7 +18,7 @@ export class MailService {
       }
 
       async sendVerificationEmail(to: string, token: string): Promise<void> {
-        const verificationUrl = `${process.env.APP_URL || 'https://connordev.cc'}/auth/verify?token=${token}`;
+        const verificationUrl = `${process.env.APP_URL || 'https://travelpathmanager.co.uk'}/auth/verify?token=${token}`;
     
         const mailOptions = {
           from: '"McDonald\'s Travel Path App" <no-reply@mcdapp.com>',
@@ -44,7 +44,7 @@ export class MailService {
       }
 
       async sendPasswordResetEmail(to: string, token: string): Promise<void> {
-        const resetUrl = `${process.env.APP_URL || 'https://connordev.cc'}/reset-password?token=${token}`;
+        const resetUrl = `${process.env.APP_URL || 'https://travelpathmanager.co.uk'}/reset-password?token=${token}`;
         
         const mailOptions = {
           from: '"McDonald\'s Travel Path App" <no-reply@mcdapp.com>',
